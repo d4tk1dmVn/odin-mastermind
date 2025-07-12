@@ -2,6 +2,7 @@ require_relative 'lib/board'
 require_relative 'lib/player'
 require_relative 'lib/player_input'
 require_relative 'lib/constants'
+require_relative 'lib/computer'
 
 =begin
 def game_over?(board, marker_one, marker_two)
@@ -43,107 +44,31 @@ def show_scores(players)
 end
 
  
+=end
 
 def run_game(players)
-
-    turn = 0
-
-    coordinates = {
-
-        "1" => [0,0],
-
-        "2" => [0,1],
-
-        "3" => [0,2],
-
-        "4" => [1,0],
-
-        "5" => [1,1],
-
-        "6" => [1,2],
-
-        "7" => [2,0],
-
-        "8" => [2,1],
-
-        "9" => [2,2]
-
-    }
-
- 
-
-    board = Board.new
-
- 
-
-    while !game_over?(board, players[0].marker, players[1].marker) do
-
-        player = players[turn%2]
-
-        puts "IT'S #{player.name} TURN!"
-
-        board.print_board
-
-        input = ' '
-
-        play = nil
-
-        while !input.match?(/^[1-9]$/) || play == nil do
-
-            puts "CHOOSE A FREE SQUARE!"
-
-            input = gets.chomp
-
-            play = valid_coordinates?(board, coordinates[input]) ? coordinates[input] : nil
-
-        end
-
-        board.mark_square(play[0], play[1], player.marker)
-
-        turn += 1
-
-    end
-
- 
-
-    display_result(players, board)
-
-    show_scores(players)
-
+  computer = Computer.new(Constants::NOTCHES)
+  colors = computer.generate_solution(true)
+  board = Board.new(Constants::ROWS, Constants::NOTCHES, colors)
+  puts board.printable_board
+  until board.winner? || board.full?
+    candidate = PlayerInput.input_colors(Constants::COLORS, Constants::COLOR_PROMPT, Constants::NOTCHES)
+    board.mark_row(candidate)
+    puts board.printable_board
+  end
+  puts board.printable_solution
 end
-
- 
 
 def launch_game
-
-    puts TITLE
-
-    want_to_play = true
-
-    players = [get_player(1), get_player(2)]
-
-    while want_to_play do
-
-        run_game(players)
-
-        prompt = "DO YOU WANT A REMATCH? Y/N"
-
-        want_to_play = get_confirmation(prompt)
-
-    end
-
-    puts "BYE!\n\n\n"
-
+  puts Constants::SEPARATOR
+  puts Constants::TITLE
+  puts Constants::SEPARATOR
+  player = PlayerInput.player_name
+  loop do
+    run_game(player)
+    break unless PlayerInput.confirm('DO YOU WANT A REMATCH? Y/N')
+  end
+  puts "BYE!\n\n\n"
 end
 
-=end
-colors = Constants::COLORS.keys.shuffle[0...Constants::NOTCHES].map { |key| Constants::COLORS[key] }
-
-board = Board.new(Constants::ROWS, Constants::NOTCHES, colors)
-puts board.printable_board
-until board.winner? || board.full?
-  candidate = PlayerInput.input_colors(Constants::COLORS, Constants::COLOR_PROMPT, Constants::NOTCHES)
-  board.mark_row(candidate)
-  puts board.printable_board
-end
-puts board.printable_solution
+launch_game
