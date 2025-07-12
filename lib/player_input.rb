@@ -1,38 +1,38 @@
 # PlayerInput module
 module PlayerInput
-  def input_name(player_number)
+  def self.input_name
     loop do
-      puts "GIVE ME PLAYER #{player_number}'S NAME"
+      puts "GIVE ME THE PLAYER'S NAME"
       input = gets.chomp
       return input if input.match(/\A(?=.*[a-zA-Z])[a-zA-Z0-9]+\z/)
     end
   end
 
-  def confirm(prompt)
+  def self.confirm(prompt)
     puts prompt
     loop do
       input = gets.chomp
-      return true if ['y', 'Y'].include?(input)
-      return false if ['n', 'N'].include?(input)
+      return true if %w[y Y].include?(input)
+      return false if %w[n N].include?(input)
     end
   end
 
-  def get_player_name(number)
-    while
-      player_name = input_name(number)
-      done = confirm("PLAYER #{number}'S NAME IS #{player_name}. IS THIS CORRECT? Y/N")
+  def self.player_name
+    loop do
+      player_name = input_name
+      done = confirm("PLAYER'S NAME IS #{player_name}. IS THIS CORRECT? Y/N")
       return player_name if done
     end
   end
 
-  def self.valid_color_input(color_list, candidate, notches) 
+  def self.valid_color_input(color_list, candidate, notches)
     return false if candidate.length != notches
 
     candidate.all? { |color| color_list.include?(color) }
   end
 
   def self.get_color_input(color_list, notches)
-    while
+    loop do
       input = gets.chomp.chars.map(&:to_sym)
       return input if valid_color_input(color_list, input, notches)
 
