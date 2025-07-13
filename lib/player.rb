@@ -2,8 +2,8 @@
 class Player
   attr_reader :name, :wins
 
-  def initialize
-    @name = get_player
+  def initialize(name)
+    @name = name
     @wins = 0
   end
 
