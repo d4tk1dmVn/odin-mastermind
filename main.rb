@@ -46,7 +46,7 @@ end
  
 =end
 
-def run_game(players)
+def run_game(player)
   computer = Computer.new(Constants::NOTCHES)
   colors = computer.generate_solution(true)
   board = Board.new(Constants::ROWS, Constants::NOTCHES, colors)
@@ -56,6 +56,7 @@ def run_game(players)
     board.mark_row(candidate)
     puts board.printable_board
   end
+  player.gloat if board.winner?
   puts board.printable_solution
 end
 
@@ -63,7 +64,7 @@ def launch_game
   puts Constants::SEPARATOR
   puts Constants::TITLE
   puts Constants::SEPARATOR
-  player = PlayerInput.player_name
+  player = Player.new(PlayerInput.player_name)
   loop do
     run_game(player)
     break unless PlayerInput.confirm('DO YOU WANT A REMATCH? Y/N')
