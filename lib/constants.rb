@@ -1,6 +1,6 @@
 module Constants
   SEPARATOR = '**********************************************'.freeze
-  TITLE = "\nATHLON'S MACHIAVELLIAN MASTERMIND v1.0.0 - 2025\n".freeze
+  TITLE = "\nODIN'S MACHIAVELLIAN MASTERMIND v1.0.0 - 2025\n".freeze
   NOTCHES = 4
   ROWS = 12
   COLORS = {
