@@ -2,41 +2,35 @@ require_relative 'constants'
 
 # Board class
 class Board
+  attr_reader :guesses
+
   def initialize(rows, notches, solution)
     @rows = rows
     @notches = notches
     @solution = solution
-    @board = []
+    @guesses = []
     @hints = []
   end
 
-  def printable_board
-    result = ''
-    @board.each_with_index do |row, index|
-      result += "#{row.join(' ')}\t\t#{@hints[index].join(' ')}\n"
-    end
-    result
-  end
+  def hints
+    return hints if winner? || full?
 
-  def printable_solution
-    return "#{@solution.join(' ')}\n" if winner? || full?
-
-    "CAN'T SEE IT YET"
+    []
   end
 
   def mark_row(guess)
     return if full?
 
     @hints << calculate_hint(guess)
-    @board << guess
+    guesses << guess
   end
 
   def winner?
-    !@board.empty? && @solution == @board[-1]
+    !guesses.empty? && @solution == guesses[-1]
   end
 
   def full?
-    @board.length == @rows
+    guesses.length == @rows
   end
 
   private
@@ -44,7 +38,7 @@ class Board
   def aggregate_correct_hints(guess, gue_hash, sol_hash, cur_hint)
     guess.each_with_index do |color, index|
       if color == @solution[index]
-        cur_hint << Constants::HINTS[:correct]
+        cur_hint << :correct
       else
         gue_hash[color] += 1
         sol_hash[@solution[index]] += 1
@@ -55,12 +49,12 @@ class Board
   def aggregate_almost_hints(gue_hash, sol_hash, cur_hint)
     gue_hash.each_key do |guess_color|
       hints_per_color = [gue_hash[guess_color], sol_hash[guess_color]].min
-      hints_per_color.times { cur_hint << Constants::HINTS[:almost] }
+      hints_per_color.times { cur_hint << :almost }
     end
   end
 
   def aggregate_incorrect_hints(incorrect_hints_amount, current_hint)
-    incorrect_hints_amount.times { current_hint << Constants::HINTS[:incorrect] }
+    incorrect_hints_amount.times { current_hint << :incorrect }
   end
 
   def calculate_hint(guess)

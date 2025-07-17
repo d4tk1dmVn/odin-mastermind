@@ -45,7 +45,6 @@ module PlayerInput
     puts colors_prompt
     puts "YOU MAY CHOOSE #{notches} COLORS"
     puts "To choose a color type it's first letter"
-    input_as_list = get_color_input(colors.keys, notches)
-    input_as_list.map { |color_key| colors[color_key] }
+    get_color_input(colors.keys, notches)
   end
 end
