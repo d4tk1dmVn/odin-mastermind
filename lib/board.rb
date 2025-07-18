@@ -12,8 +12,8 @@ class Board
     @hints = []
   end
 
-  def hints
-    return hints if winner? || full?
+  def solution
+    return solution if winner? || full?
 
     []
   end
