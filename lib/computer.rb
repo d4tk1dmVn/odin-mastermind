@@ -11,7 +11,7 @@ class Computer
     if easy_mode
       random_color_keys = Constants::COLORS.keys.shuffle
       random_chunk = random_color_keys[0...@notches]
-      solution = random_chunk.map { |key| Constants::COLORS[key] }
+      solution = random_chunk
     else
       solution = generate_hard_solution
     end
@@ -23,8 +23,7 @@ class Computer
   def generate_hard_solution
     solution = []
     @notches.times do
-      random_color = Constants::COLORS.keys.sample
-      solution << Constants::COLORS[random_color]
+      solution << Constants::COLORS.keys.sample
     end
     solution
   end
