@@ -13,7 +13,7 @@ class Board
   end
 
   def solution
-    return solution if winner? || full?
+    return @solution if winner? || full?
 
     []
   end

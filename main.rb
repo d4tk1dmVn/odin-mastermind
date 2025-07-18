@@ -58,6 +58,7 @@ def run_game(player)
   end
   player.gloat if board.winner?
   puts board.guesses.zip(board.hints)
+  print board.solution
 end
 
 def launch_game
