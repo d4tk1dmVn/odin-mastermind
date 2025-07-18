@@ -54,10 +54,10 @@ def run_game(player)
   until board.winner? || board.full?
     candidate = PlayerInput.input_colors(Constants::COLORS, Constants::COLOR_PROMPT, Constants::NOTCHES)
     board.mark_row(candidate)
-    puts board.printable_board
+    puts board.guesses.zip(board.hints)
   end
   player.gloat if board.winner?
-  puts board.printable_solution
+  puts board.guesses.zip(board.hints)
 end
 
 def launch_game
