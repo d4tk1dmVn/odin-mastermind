@@ -50,7 +50,7 @@ def run_game(player)
   computer = Computer.new(Constants::NOTCHES)
   colors = computer.generate_solution(true)
   board = Board.new(Constants::ROWS, Constants::NOTCHES, colors)
-  puts board.printable_board
+  puts board.guesses.zip(board.hints)
   until board.winner? || board.full?
     candidate = PlayerInput.input_colors(Constants::COLORS, Constants::COLOR_PROMPT, Constants::NOTCHES)
     board.mark_row(candidate)
