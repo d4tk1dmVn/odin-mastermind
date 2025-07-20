@@ -14,6 +14,16 @@ module Constants
     v: 'violet',
     n: 'none'
   }.freeze
+  ANSI_ESCAPING = {
+    r: '196',
+    o: '208',
+    y: '226',
+    g: '46',
+    v: '200',
+    i: '57',
+    b: '21',
+    n: '232'
+  }.freeze
   HINTS = {
     correct: 'CORRECT',
     almost: 'ALMOST',
