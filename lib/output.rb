@@ -9,10 +9,8 @@ module Outputable
   end
 
   def self.color_prompt
-    color_keys = Constants::COLORS.keys
     prompt_text = ''
-    color_keys.each do |color_key|
-      color_name = Constants::COLORS[color_key]
+    Constants::COLORS.each do |color_key, color_name|
       prompt_chunk = "(#{color_name[0]})#{color_name[1..]}"
       colorized_prompt_color = colorize(color_key, prompt_chunk)
       prompt_text += "#{colorized_prompt_color}\n"
