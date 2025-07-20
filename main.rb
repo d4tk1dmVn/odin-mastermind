@@ -3,6 +3,7 @@ require_relative 'lib/player'
 require_relative 'lib/player_input'
 require_relative 'lib/constants'
 require_relative 'lib/computer'
+require_relative 'lib/output'
 
 =begin
 def game_over?(board, marker_one, marker_two)
@@ -52,13 +53,13 @@ def run_game(player)
   board = Board.new(Constants::ROWS, Constants::NOTCHES, colors)
   puts board.guesses.zip(board.hints)
   until board.winner? || board.full?
-    candidate = PlayerInput.input_colors(Constants::COLORS, Constants::COLOR_PROMPT, Constants::NOTCHES)
+    candidate = PlayerInput.input_colors(Constants::COLORS, Outputable.color_prompt, Constants::NOTCHES)
     board.mark_row(candidate)
     puts board.guesses.zip(board.hints)
   end
   player.gloat if board.winner?
   puts board.guesses.zip(board.hints)
-  print board.solution
+  puts board.solution
 end
 
 def launch_game
