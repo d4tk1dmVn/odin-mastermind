@@ -5,47 +5,16 @@ require_relative 'lib/constants'
 require_relative 'lib/computer'
 require_relative 'lib/output'
 
-=begin
-def game_over?(board, marker_one, marker_two)
-    board.check_winner == marker_one || board.check_winner == marker_two || board.no_winner?
+def compute_win(player)
+  player.win
+  puts Outputable.win_output(player.name)
 end
 
-def valid_coordinates?(board, coordinates)
-    coordinates != nil && board.free_square?(*coordinates)
+def end_of_game(board, codemaker, codebreaker)
+  puts Outputable.board_output(board.guesses.zip(board.hints))
+  puts Outputable.solution_output(board.solution)
+  board.winner? ? compute_win(codebreaker) : compute_win(codemaker)
 end
-
- 
-
-def display_result (players, board)
-
-    players[0].gloat if players[0].marker == board.check_winner
-
-    players[1].gloat if players[1].marker == board.check_winner
-
-    puts "IT'S A TIE!" if board.no_winner?
-
-end
-
- 
-
-def show_scores(players)
-
-    if players[0].wins == players[1].wins
-
-        puts "SO FAR BOTH PLAYERS ARE TIED!!!!"
-
-    else
-
-        winner, loser = players[0].wins > players[1].wins ? players : players.reverse
-
-        puts "SO FAR #{winner.name} IS AHEAD OF #{loser.name} #{winner.wins} TO #{loser.wins}"
-
-    end
-
-end
-
- 
-=end
 
 def run_game(player)
   computer = Computer.new(Constants::NOTCHES)
@@ -56,21 +25,17 @@ def run_game(player)
     board.mark_row(candidate)
     puts Outputable.board_output(board.guesses.zip(board.hints))
   end
-  player.gloat if board.winner?
-  puts Outputable.board_output(board.guesses.zip(board.hints))
-  puts Outputable.solution_output(board.solution)
+  end_of_game(board, computer, player)
 end
 
 def launch_game
-  puts Constants::SEPARATOR
-  puts Constants::TITLE
-  puts Constants::SEPARATOR
+  puts Outputable.game_title
   player = Player.new(PlayerInput.player_name)
   loop do
     run_game(player)
     break unless PlayerInput.confirm('DO YOU WANT A REMATCH? Y/N')
   end
-  puts "BYE!\n\n\n"
+  puts Outputable.exit_message
 end
 
 launch_game
