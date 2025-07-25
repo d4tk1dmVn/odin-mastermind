@@ -7,14 +7,7 @@ class Player
     @wins = 0
   end
 
-  def gloat
-    puts "#{name} WINS!!!!"
-    concede_win
-  end
-
-  private
-
-  def concede_win
+  def win
     @wins += 1
   end
 end
