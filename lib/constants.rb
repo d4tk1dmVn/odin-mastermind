@@ -25,7 +25,8 @@ module Constants
     v: '200',
     i: '57',
     b: '21',
-    n: '232'
+    n: '232',
+    player: '204'
   }.freeze
   HINTS = {
     correct: 'CORRECT',
