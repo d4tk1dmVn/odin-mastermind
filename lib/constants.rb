@@ -5,20 +5,23 @@ module Constants
   ROWS = 12
   # Colors Players choose from
   COLORS = {
-    r: 'red',
-    o: 'orange',
-    y: 'yellow',
-    g: 'green',
-    b: 'blue',
-    i: 'indigo',
-    v: 'violet',
-    n: 'none'
+    r: 'RED',
+    o: 'ORANGE',
+    y: 'YELLOW',
+    g: 'GREEN',
+    b: 'BLUE',
+    i: 'INDIGO',
+    v: 'VIOLET',
+    n: 'NONE'
   }.freeze
   ANSI_ESCAPING = {
     r: '196',
+    incorrect: '196',
     o: '208',
+    almost: '208',
     y: '226',
     g: '46',
+    correct: '46',
     v: '200',
     i: '57',
     b: '21',

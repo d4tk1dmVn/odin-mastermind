@@ -51,15 +51,14 @@ def run_game(player)
   computer = Computer.new(Constants::NOTCHES)
   colors = computer.generate_solution(true)
   board = Board.new(Constants::ROWS, Constants::NOTCHES, colors)
-  puts board.guesses.zip(board.hints)
   until board.winner? || board.full?
     candidate = PlayerInput.input_colors(Constants::COLORS, Outputable.color_prompt, Constants::NOTCHES)
     board.mark_row(candidate)
-    puts board.guesses.zip(board.hints)
+    puts Outputable.board_output(board.guesses.zip(board.hints))
   end
   player.gloat if board.winner?
-  puts board.guesses.zip(board.hints)
-  puts board.solution
+  puts Outputable.board_output(board.guesses.zip(board.hints))
+  puts Outputable.solution_output(board.solution)
 end
 
 def launch_game
