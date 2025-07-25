@@ -1,11 +1,19 @@
 require_relative 'constants'
 
 module Outputable
+  def self.game_title
+    "#{Constants::SEPARATOR}\n#{Constants::TITLE}\n#{Constants::SEPARATOR}\n"
+  end
+
   def self.colorize(color_key, text)
     escape_code = Constants::ANSI_ESCAPING[color_key]
     prefix = "\033[38;5;#{escape_code}m"
     suffix = "\033[0m"
     "#{prefix}#{text}#{suffix}"
+  end
+
+  def self.win_output(player_name)
+    "#{colorize(:player, player_name)} wins!"
   end
 
   def self.color_prompt
@@ -52,11 +60,15 @@ module Outputable
     zipped_board.each do |guess_and_hint|
       result += row_output(guess_and_hint)
     end
-    "\n\n#{result}\n\n"
+    "\033[2J\033[H#{result}\n\n"
   end
 
   def self.solution_output(solution)
     colorized_solution = create_color_row(solution, Constants::COLORS)
     "\n\n#{colorized_solution}\n\n"
+  end
+
+  def self.exit_message
+    "\nBYE\n\n\n"
   end
 end
