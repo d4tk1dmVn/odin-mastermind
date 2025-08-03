@@ -34,4 +34,5 @@ module Constants
     incorrect: 'INCORRECT'
   }.freeze
   MAX_ROW_LENGTH = 80
+  # What about using "█" for the color pegs?
 end
