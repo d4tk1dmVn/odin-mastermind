@@ -20,6 +20,10 @@ class Computer
     solution
   end
 
+  def generate_guess_list(solution)
+    Knuthable.solve_mastermind(solution)
+  end
+
   private
 
   def generate_hard_solution
@@ -28,9 +32,5 @@ class Computer
       solution << Constants::COLORS.keys.sample
     end
     solution
-  end
-
-  def generate_guess_list(solution, difficulty)
-    Knuthable.solve_mastermind(solution, difficulty)
   end
 end

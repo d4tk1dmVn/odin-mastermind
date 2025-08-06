@@ -16,13 +16,25 @@ def end_of_game(board, codemaker, codebreaker)
   board.winner? ? compute_win(codebreaker) : compute_win(codemaker)
 end
 
-def run_game(player)
+def arun_game(player)
   computer = Computer.new(Constants::NOTCHES)
   colors = computer.generate_solution(true)
   board = Board.new(Constants::ROWS, Constants::NOTCHES, colors)
   until board.winner? || board.full?
     candidate = PlayerInput.input_colors(Constants::COLORS, Outputable.color_prompt, Constants::NOTCHES)
     board.mark_row(candidate)
+    puts Outputable.board_output(board.guesses.zip(board.hints))
+  end
+  end_of_game(board, computer, player)
+end
+
+def run_game(player)
+  computer = Computer.new(Constants::NOTCHES)
+  solution = PlayerInput.input_colors(Constants::COLORS, Outputable.color_prompt, Constants::NOTCHES)
+  computer_guesses = computer.generate_guess_list(solution).take(Constants::ROWS).reverse
+  board = Board.new(Constants::ROWS, Constants::NOTCHES, solution)
+  until board.winner? || board.full?
+    board.mark_row(computer_guesses.pop)
     puts Outputable.board_output(board.guesses.zip(board.hints))
   end
   end_of_game(board, computer, player)

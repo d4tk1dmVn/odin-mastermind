@@ -6,7 +6,7 @@ require_relative 'constants'
 # All props and rights go to the owner, catlzy
 
 module Knuthable
-  def evaluate_guess(solution, guess)
+  def self.evaluate_guess(solution, guess)
     return unless solution.length == guess.length
 
     correct_positions = []
@@ -24,7 +24,7 @@ module Knuthable
       end
     end
 
-    reduced_set = Set(reduced_guess) & Set(reduced_code)
+    reduced_set = Set.new(reduced_guess) & Set.new(reduced_code)
 
     colors_in_place = correct_positions.length
     colors_out_of_place = 0
@@ -39,31 +39,34 @@ module Knuthable
     [colors_in_place, colors_out_of_place]
   end
 
-  def generate_all_solutions
+  def self.generate_all_solutions
     result = []
-    Constants::COLORS.keys.repeated_permutation(@notches) do |pos_solution|
+    Constants::COLORS.keys.repeated_permutation(Constants::NOTCHES) do |pos_solution|
       result.append(pos_solution)
     end
     result
   end
 
-  def generate_all_scores
+  def self.generate_all_scores
     result = []
-    @notches.times do |i|
-      @notches - i.times do |j|
+    (Constants::NOTCHES + 1).times do |i|
+      (Constants::NOTCHES - i + 1).times do |j|
         result << [i, j]
       end
     end
     result.delete_at(result.length - 2)
+    result
   end
 
-  def minimax_step(all_solutions, all_scores, possible_solutions, guess_list)
+  def self.minimax_step(all_solutions, all_scores, possible_solutions, guess_list)
     current_unused_scores = [] * all_solutions.length
     all_solutions.each do |solution|
       if !guess_list.include?(solution)
-        hit_count = [0] * all_scores.lenght
+        hit_count = [0] * all_scores.length
         possible_solutions.each do |possible_solution|
-          hit_count[all_scores.index(evaluate_guess(possible_solution, solution))] += 1
+          evaluated = evaluate_guess(possible_solution, solution)
+          index = all_scores.index(evaluated)
+          hit_count[index] += 1
         end
         current_unused_scores << possible_solutions.length - hit_count.max
       else
@@ -73,7 +76,7 @@ module Knuthable
     current_unused_scores
   end
 
-  def calculate_max_score_indices(current_unused_scores)
+  def self.calculate_max_score_indices(current_unused_scores)
     max_score = current_unused_scores.max
     indices = []
     current_unused_scores.each_with_index do |score, index|
@@ -82,7 +85,7 @@ module Knuthable
     indices
   end
 
-  def purge_less_likely_solutions(possible_solutions, guess, guess_correctness)
+  def self.purge_less_likely_solutions(possible_solutions, guess, guess_correctness)
     purged_solutions = []
     possible_solutions.each do |possible_solution|
       purged_solutions << possible_solution if evaluate_guess(guess, possible_solution) == guess_correctness
@@ -90,7 +93,7 @@ module Knuthable
     purged_solutions
   end
 
-  def calculate_next_guess(all_solutions, possible_solutions, max_score_indices)
+  def self.calculate_next_guess(all_solutions, possible_solutions, max_score_indices)
     result = []
     change = false
     max_score_indices.each do |index|
@@ -104,7 +107,7 @@ module Knuthable
     result
   end
 
-  def solve_mastermind(solution)
+  def self.solve_mastermind(solution)
     all_solutions = generate_all_solutions
     possible_solutions = all_solutions.dup
     all_scores = generate_all_scores
@@ -112,7 +115,7 @@ module Knuthable
     guess_list = [guess]
     guess_correctness = evaluate_guess(solution, guess)
 
-    while guess_correctness != [@notches, 0]
+    while guess_correctness != [Constants::NOTCHES, 0]
       possible_solutions = purge_less_likely_solutions(possible_solutions, guess, guess_correctness)
       current_unused_scores = minimax_step(all_solutions, all_scores, possible_solutions, guess_list)
       max_score_indices = calculate_max_score_indices(current_unused_scores)
