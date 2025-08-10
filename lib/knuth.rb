@@ -5,6 +5,14 @@ require 'set'
 # All props and rights go to the owner, catlzy
 
 module Knuthable
+  def self.random_boolean?
+    [true, false].sample
+  end
+
+  def self.random_integer
+    [1, -1].sample
+  end
+
   def self.generate_all_solutions(notches, keys)
     result = []
     keys.repeated_permutation(notches) do |pos_solution|
@@ -55,17 +63,27 @@ module Knuthable
     [colors_in_place, colors_out_of_place]
   end
 
+  def self.calculate_max_hit_count(solution, possible_solutions, all_scores)
+    hit_count = [0] * all_scores.length
+    possible_solutions.each do |possible_solution|
+      possible_solution_score = evaluate_guess(possible_solution, solution)
+      index = all_scores.index(possible_solution_score)
+      hit_count[index] += 1
+    end
+    hit_count.max
+  end
+
+  def self.leveled_unused_score(proper_result)
+    altered_result = proper_result + random_integer
+    random_boolean? && altered_result.positive? ? altered_result : proper_result
+  end
+
   def self.minimax_step(all_solutions, all_scores, possible_solutions, guess_list)
     current_unused_scores = [] * all_solutions.length
     all_solutions.each do |solution|
       if !guess_list.include?(solution)
-        hit_count = [0] * all_scores.length
-        possible_solutions.each do |possible_solution|
-          evaluated = evaluate_guess(possible_solution, solution)
-          index = all_scores.index(evaluated)
-          hit_count[index] += 1
-        end
-        current_unused_scores << possible_solutions.length - hit_count.max
+        max_hint_count = calculate_max_hit_count(solution, possible_solutions, all_scores)
+        current_unused_scores << leveled_unused_score(possible_solutions.length - max_hint_count)
       else
         current_unused_scores << 0
       end
@@ -82,11 +100,18 @@ module Knuthable
     indices
   end
 
+  def self.should_be_added?(must_be_added)
+    return true if must_be_added
+
+    random_boolean?
+  end
+
   def self.purge_less_likely_solutions(possible_solutions, solution, guess)
     guess_correctness = evaluate_guess(solution, guess)
     purged_solutions = []
     possible_solutions.each do |possible_solution|
-      purged_solutions << possible_solution if evaluate_guess(guess, possible_solution) == guess_correctness
+      must_be_added = evaluate_guess(guess, possible_solution) == guess_correctness
+      purged_solutions << possible_solution if should_be_added?(must_be_added)
     end
     purged_solutions
   end
