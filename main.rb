@@ -29,12 +29,11 @@ def arun_game(player)
 end
 
 def run_game(player)
-  computer = Computer.new(Constants::NOTCHES)
+  computer = Computer.new(Constants::NOTCHES, Constants::COLORS.keys)
   solution = PlayerInput.input_colors(Constants::COLORS, Outputable.color_prompt, Constants::NOTCHES)
-  computer_guesses = computer.generate_guess_list(solution).take(Constants::ROWS).reverse
   board = Board.new(Constants::ROWS, Constants::NOTCHES, solution)
   until board.winner? || board.full?
-    board.mark_row(computer_guesses.pop)
+    board.mark_row(computer.generate_guess(solution, board.guesses))
     puts Outputable.board_output(board.guesses.zip(board.hints))
   end
   end_of_game(board, computer, player)
