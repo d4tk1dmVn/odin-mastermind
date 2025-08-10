@@ -14,9 +14,9 @@ def end_of_game(board, codebreaker_mode, player, computer)
   puts Outputable.board_output(board.guesses.zip(board.hints))
   puts Outputable.solution_output(board.solution)
   if (codebreaker_mode && board.winner?) || (!codebreaker_mode && !board.winner?)
-    puts "#{player.name} wins"
+    puts Outputable.win_output(player.name)
   else
-    puts "#{computer.name} wins!"
+    puts Outputable.win_output(computer.name)
   end
 end
 
