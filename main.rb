@@ -44,7 +44,6 @@ def codemaker_mode(player)
   board = Board.new(ROWS, NOTCHES, solution)
   until board.winner? || board.full?
     computer_guess = computer.generate_guess(solution, board.guesses)
-    print(board.guesses.length)
     # The user can type stuff when this happens, could break stuff
     board.mark_row(computer_guess)
     puts Outputable.board_output(board.guesses.zip(board.hints))
@@ -55,8 +54,9 @@ end
 def launch_game
   puts Outputable.game_title
   player = Player.new(PlayerInput.player_name)
+  codebreaker = PlayerInput.confirm('DO YOU WANT TO BE A CODEBREAKER (y) OR A CODEMAKER (n) ? Y/N')
   loop do
-    codebreaker? ? codebreaker_mode(player) : codemaker_mode(player)
+    codebreaker ? codebreaker_mode(player) : codemaker_mode(player)
     break unless PlayerInput.confirm('DO YOU WANT A REMATCH? Y/N')
   end
   puts Outputable.exit_message
