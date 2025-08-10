@@ -5,6 +5,10 @@ require_relative 'lib/constants'
 require_relative 'lib/computer'
 require_relative 'lib/output'
 
+NOTCHES = Constants::NOTCHES
+ROWS = Constants::ROWS
+COLORS = Constants::COLORS
+
 def compute_win(player)
   player.win
   puts Outputable.win_output(player.name)
@@ -17,11 +21,11 @@ def end_of_game(board, codemaker, codebreaker)
 end
 
 def arun_game(player)
-  computer = Computer.new(Constants::NOTCHES)
+  computer = Computer.new(NOTCHES)
   colors = computer.generate_solution(true)
-  board = Board.new(Constants::ROWS, Constants::NOTCHES, colors)
+  board = Board.new(ROWS, NOTCHES, colors)
   until board.winner? || board.full?
-    candidate = PlayerInput.input_colors(Constants::COLORS, Outputable.color_prompt, Constants::NOTCHES)
+    candidate = PlayerInput.input_colors(COLORS, Outputable.color_prompt, NOTCHES)
     board.mark_row(candidate)
     puts Outputable.board_output(board.guesses.zip(board.hints))
   end
@@ -29,10 +33,11 @@ def arun_game(player)
 end
 
 def run_game(player)
-  computer = Computer.new(Constants::NOTCHES, Constants::COLORS.keys)
-  solution = PlayerInput.input_colors(Constants::COLORS, Outputable.color_prompt, Constants::NOTCHES)
-  board = Board.new(Constants::ROWS, Constants::NOTCHES, solution)
+  computer = Computer.new(NOTCHES, COLORS.keys)
+  solution = PlayerInput.input_colors(COLORS, Outputable.color_prompt, NOTCHES)
+  board = Board.new(ROWS, NOTCHES, solution)
   until board.winner? || board.full?
+    # The user can type stuff when this happens, could break stuff
     board.mark_row(computer.generate_guess(solution, board.guesses))
     puts Outputable.board_output(board.guesses.zip(board.hints))
   end
