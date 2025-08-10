@@ -1,5 +1,3 @@
-require_relative 'constants'
-
 # Board class
 class Board
   attr_reader :guesses, :hints
