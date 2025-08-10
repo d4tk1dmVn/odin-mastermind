@@ -6,11 +6,11 @@ require 'set'
 
 module Knuthable
   def self.random_boolean?
-    [true, false].sample
+    [true, false, false, false].sample
   end
 
   def self.random_integer
-    [1, -1].sample
+    [0, 1, -1].sample
   end
 
   def self.generate_all_solutions(notches, keys)
