@@ -50,8 +50,8 @@ end
 def launch_game
   puts Outputable.game_title
   player = Player.new(PlayerInput.player_name)
-  codebreaker = PlayerInput.confirm('DO YOU WANT TO BE A CODEBREAKER (y) OR A CODEMAKER (n) ? Y/N')
   loop do
+    codebreaker = PlayerInput.confirm('DO YOU WANT TO BE A CODEBREAKER (y) OR A CODEMAKER (n) ? Y/N')
     codebreaker ? codebreaker_mode(player) : codemaker_mode(player)
     break unless PlayerInput.confirm('DO YOU WANT A REMATCH? Y/N')
   end
