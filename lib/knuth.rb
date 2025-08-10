@@ -1,23 +1,22 @@
 require 'set'
-require_relative 'constants'
 
 # This module is based on the code found at
 # https://github.com/catlzy/knuth-mastermind/blob/master/Mastermind.py
 # All props and rights go to the owner, catlzy
 
 module Knuthable
-  def self.generate_all_solutions
+  def self.generate_all_solutions(notches, keys)
     result = []
-    Constants::COLORS.keys.repeated_permutation(Constants::NOTCHES) do |pos_solution|
+    keys.repeated_permutation(notches) do |pos_solution|
       result.append(pos_solution)
     end
     result
   end
 
-  def self.generate_all_scores
+  def self.generate_all_scores(notches)
     result = []
-    (Constants::NOTCHES + 1).times do |i|
-      (Constants::NOTCHES - i + 1).times do |j|
+    (notches + 1).times do |i|
+      (notches - i + 1).times do |j|
         result << [i, j]
       end
     end
@@ -29,7 +28,6 @@ module Knuthable
     return unless solution.length == guess.length
 
     correct_positions = []
-    incorrect_positions = []
     reduced_guess = []
     reduced_code = []
 
@@ -37,7 +35,6 @@ module Knuthable
       if color == guess[index]
         correct_positions.append(index)
       else
-        incorrect_positions.append(index)
         reduced_guess.append(guess[index])
         reduced_code.append(color)
       end
@@ -94,7 +91,7 @@ module Knuthable
     purged_solutions
   end
 
-  def self.calculate_guess(all_solutions, possible_solutions, max_score_indices)
+  def self.calculate_next_guess(all_solutions, possible_solutions, max_score_indices)
     result = []
     change = false
     max_score_indices.each do |index|
