@@ -2,31 +2,27 @@ require_relative 'lib/board'
 require_relative 'lib/player'
 require_relative 'lib/player_input'
 require_relative 'lib/constants'
-require_relative 'lib/computer'
+require_relative 'lib/codemaker'
+require_relative 'lib/codebreaker'
 require_relative 'lib/output'
 
 NOTCHES = Constants::NOTCHES
 ROWS = Constants::ROWS
 COLORS = Constants::COLORS
 
-def compute_win(player)
-  player.win
-  puts Outputable.win_output(player.name)
-end
-
-def codebreaker?
-  [true, false].sample
-end
-
-def end_of_game(board, codemaker, codebreaker)
+def end_of_game(board, codebreaker_mode, player, computer)
   puts Outputable.board_output(board.guesses.zip(board.hints))
   puts Outputable.solution_output(board.solution)
-  board.winner? ? compute_win(codebreaker) : compute_win(codemaker)
+  if (codebreaker_mode && board.winner?) || (!codebreaker_mode && !board.winner?)
+    puts "#{player.name} wins"
+  else
+    puts "#{computer.name} wins!"
+  end
 end
 
 def codebreaker_mode(player)
-  puts "\n CODEBREAKER MODE \n"
-  computer = Computer.new(NOTCHES, COLORS.keys)
+  puts Constants::CODEBREAKER_MESSAGE
+  computer = Codemaker.new(NOTCHES, COLORS.keys)
   solution = computer.generate_solution
   board = Board.new(ROWS, NOTCHES, solution)
   until board.winner? || board.full?
@@ -34,13 +30,13 @@ def codebreaker_mode(player)
     board.mark_row(candidate)
     puts Outputable.board_output(board.guesses.zip(board.hints))
   end
-  end_of_game(board, computer, player)
+  end_of_game(board, true, player, computer)
 end
 
 def codemaker_mode(player)
-  puts "\n CODEMAKER MODE \n"
+  puts Constants::CODEMAKER_MESSAGE
   solution = PlayerInput.input_colors(COLORS, Outputable.color_prompt, NOTCHES)
-  computer = Computer.new(NOTCHES, COLORS.keys)
+  computer = Codebreaker.new(NOTCHES, COLORS.keys)
   board = Board.new(ROWS, NOTCHES, solution)
   until board.winner? || board.full?
     computer_guess = computer.generate_guess(solution, board.guesses)
@@ -48,7 +44,7 @@ def codemaker_mode(player)
     board.mark_row(computer_guess)
     puts Outputable.board_output(board.guesses.zip(board.hints))
   end
-  end_of_game(board, computer, player)
+  end_of_game(board, false, player, computer)
 end
 
 def launch_game
