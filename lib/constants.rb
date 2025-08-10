@@ -10,8 +10,6 @@ module Constants
     y: 'YELLOW',
     g: 'GREEN',
     b: 'BLUE',
-    i: 'INDIGO',
-    v: 'VIOLET',
     n: 'NONE'
   }.freeze
   ANSI_ESCAPING = {
@@ -22,8 +20,6 @@ module Constants
     y: '226',
     g: '46',
     correct: '46',
-    v: '200',
-    i: '57',
     b: '21',
     n: '232',
     player: '204'
