@@ -15,9 +15,9 @@ class Computer
     @possible_solutions = @all_solutions.dup
   end
 
-  def generate_solution(easy_mode)
+  def generate_solution
     solution = []
-    if easy_mode
+    if [0, 1].sample.zero?
       random_color_keys = keys.shuffle
       random_chunk = random_color_keys[0...notches]
       solution = random_chunk

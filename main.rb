@@ -14,16 +14,21 @@ def compute_win(player)
   puts Outputable.win_output(player.name)
 end
 
+def codebreaker?
+  [true, false].sample
+end
+
 def end_of_game(board, codemaker, codebreaker)
   puts Outputable.board_output(board.guesses.zip(board.hints))
   puts Outputable.solution_output(board.solution)
   board.winner? ? compute_win(codebreaker) : compute_win(codemaker)
 end
 
-def arun_game(player)
-  computer = Computer.new(NOTCHES)
-  colors = computer.generate_solution(true)
-  board = Board.new(ROWS, NOTCHES, colors)
+def codebreaker_mode(player)
+  puts "\n CODEBREAKER MODE \n"
+  computer = Computer.new(NOTCHES, COLORS.keys)
+  solution = computer.generate_solution
+  board = Board.new(ROWS, NOTCHES, solution)
   until board.winner? || board.full?
     candidate = PlayerInput.input_colors(COLORS, Outputable.color_prompt, NOTCHES)
     board.mark_row(candidate)
@@ -32,13 +37,16 @@ def arun_game(player)
   end_of_game(board, computer, player)
 end
 
-def run_game(player)
-  computer = Computer.new(NOTCHES, COLORS.keys)
+def codemaker_mode(player)
+  puts "\n CODEMAKER MODE \n"
   solution = PlayerInput.input_colors(COLORS, Outputable.color_prompt, NOTCHES)
+  computer = Computer.new(NOTCHES, COLORS.keys)
   board = Board.new(ROWS, NOTCHES, solution)
   until board.winner? || board.full?
+    computer_guess = computer.generate_guess(solution, board.guesses)
+    print(board.guesses.length)
     # The user can type stuff when this happens, could break stuff
-    board.mark_row(computer.generate_guess(solution, board.guesses))
+    board.mark_row(computer_guess)
     puts Outputable.board_output(board.guesses.zip(board.hints))
   end
   end_of_game(board, computer, player)
@@ -48,7 +56,7 @@ def launch_game
   puts Outputable.game_title
   player = Player.new(PlayerInput.player_name)
   loop do
-    run_game(player)
+    codebreaker? ? codebreaker_mode(player) : codemaker_mode(player)
     break unless PlayerInput.confirm('DO YOU WANT A REMATCH? Y/N')
   end
   puts Outputable.exit_message
