@@ -34,5 +34,6 @@ module Constants
     incorrect: 'INCORRECT'
   }.freeze
   MAX_ROW_LENGTH = 80
-  # What about using "█" for the color pegs?
+  CODEMAKER_MESSAGE = "\n CODEMAKER MODE \n Create a code of #{NOTCHES} colors, make the Computer break the code!\n".freeze
+  CODEBREAKER_MESSAGE = "\n CODEBREAKER MODE \n The Computer creates a code of #{NOTCHES} colors, you must break it!\n".freeze
 end
